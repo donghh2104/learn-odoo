@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dog,access.dog,model_dog,base.group_user,1,1,1,1
+access_animal_abstract,access.animal.abstract,model_my_module_animal_abstract,base.group_user,1,1,1,1
+access_transient_model,access.transient.model,model_transient_model,base.group_user,1,1,1,1
