@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="estate_menu_root"
+              name="Bất động sản"
+              web_icon="estate,static/description/icon.png"/>
+
+    <menuitem id="estate_menu_advertisement"
+              name="Quản lý tin đăng"
+              parent="estate_menu_root"/>
+
+    <menuitem id="estate_menu_property"
+              name="Tất cả BĐS"
+              parent="estate_menu_advertisement"
+              action="estate_property_action"
+              sequence="10"/>
+
+    <menuitem id="estate_menu_partner"
+              name="Khách hàng"
+              parent="estate_menu_advertisement"
+              action="base.action_partner_form"
+              sequence="20"/>
+
+    <menuitem id="estate_menu_offer_wizard"
+              name="Tạo đề nghị nhanh"
+              parent="estate_menu_advertisement"
+              action="estate_property_offer_wizard_action"
+              sequence="30"/>
+
+    <menuitem id="estate_menu_settings"
+              name="Cấu hình"
+              parent="estate_menu_root"/>
+
+    <menuitem id="estate_menu_property_type"
+              name="Loại BĐS"
+              parent="estate_menu_settings"
+              action="estate_property_type_action"/>
+
+    <menuitem id="estate_menu_property_tag"
+              name="Nhãn/Tags"
+              parent="estate_menu_settings"
+              action="estate_property_tag_action"/>
+</odoo>

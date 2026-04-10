@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_demo_partner_buyer_a" model="res.partner">
+        <field name="name">Nguyễn Văn A</field>
+        <field name="email">buyer.a@example.com</field>
+    </record>
+
+    <record id="estate_demo_partner_buyer_b" model="res.partner">
+        <field name="name">Trần Thị B</field>
+        <field name="email">buyer.b@example.com</field>
+    </record>
+
+    <record id="estate_demo_property_new" model="estate.property">
+        <field name="name">Nhà phố Quận 7 - Trạng thái mới</field>
+        <field name="expected_price">2500000000</field>
+        <field name="property_type_id" ref="estate_property_type_data_residential"/>
+        <field name="state">new</field>
+    </record>
+
+    <record id="estate_demo_property_offer_received" model="estate.property">
+        <field name="name">Căn hộ Quận 2 - Đã nhận đề nghị</field>
+        <field name="expected_price">1800000000</field>
+        <field name="property_type_id" ref="estate_property_type_data_apartment"/>
+        <field name="state">offer_received</field>
+    </record>
+
+    <record id="estate_demo_property_sold" model="estate.property">
+        <field name="name">Biệt thự Thủ Đức - Đã bán</field>
+        <field name="expected_price">6200000000</field>
+        <field name="selling_price">6000000000</field>
+        <field name="property_type_id" ref="estate_property_type_data_villa"/>
+        <field name="buyer_id" ref="estate_demo_partner_buyer_a"/>
+        <field name="state">sold</field>
+    </record>
+
+    <record id="estate_demo_offer_pending" model="estate.property.offer">
+        <field name="price">1700000000</field>
+        <field name="partner_id" ref="estate_demo_partner_buyer_b"/>
+        <field name="property_id" ref="estate_demo_property_offer_received"/>
+        <field name="validity">5</field>
+    </record>
+</odoo>

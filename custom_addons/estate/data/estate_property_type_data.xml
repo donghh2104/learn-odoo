@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_type_data_residential" model="estate.property.type">
+        <field name="name">Nhà ở (Residential)</field>
+    </record>
+    <record id="estate_property_type_data_apartment" model="estate.property.type">
+        <field name="name">Căn hộ/Chung cư (Apartment)</field>
+    </record>
+    <record id="estate_property_type_data_villa" model="estate.property.type">
+        <field name="name">Biệt thự (Villa)</field>
+    </record>
+    <record id="estate_property_type_data_land" model="estate.property.type">
+        <field name="name">Đất nền (Land)</field>
+    </record>
+</odoo>

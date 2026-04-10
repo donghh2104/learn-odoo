@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_offer_wizard_view_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.wizard.form</field>
+        <field name="model">estate.property.offer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tạo đề nghị mua hàng loạt">
+                <group>
+                    <group>
+                        <field name="partner_id" options="{'no_create_edit': True}"/>
+                        <field name="price"/>
+                        <field name="discount_percent"/>
+                        <field name="validity"/>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Ví dụ: Ưu đãi theo chiến dịch cuối quý"/>
+                        <field name="property_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_create_offers" string="Xác nhận tạo" type="object" class="btn-primary"/>
+                    <button string="Hủy bỏ" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action để mở wizard (target=new = popup) -->
+    <record id="estate_property_offer_wizard_action" model="ir.actions.act_window">
+        <field name="name">Tạo đề nghị hàng loạt</field>
+        <field name="res_model">estate.property.offer.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_validity': 7}</field>
+    </record>
+</odoo>

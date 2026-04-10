@@ -18,3 +18,7 @@ class People(models.Model):
         for record in self:
             if record.age < 0:
                 raise ValidationError("Tuổi không được là số âm!")
+
+    def action_test(self):
+        # Hàm này chỉ để test button có icon
+        return True

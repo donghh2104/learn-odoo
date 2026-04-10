@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_view_tree" model="ir.ui.view">
+        <field name="name">estate.property.tree</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <tree string="Bất động sản"
+                  decoration-success="state in ('offer_received', 'offer_accepted')"
+                  decoration-bf="state == 'offer_accepted'"
+                  decoration-muted="state == 'sold'">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="priority_level"/>
+                <field name="property_type_id"/>
+                <field name="salesperson_id"/>
+                <field name="postcode"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="expected_price"/>
+                <field name="best_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" optional="hide"/>
+                <field name="state"/>   
+            </tree>
+        </field>
+    </record>
+
+    <record id="estate_property_view_form" model="ir.ui.view">
+        <field name="name">estate.property.form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Bất động sản">
+                <header>
+                    <button name="action_sold" type="object" string="Đã bán"
+                            class="oe_highlight" attrs="{'invisible': [('state', 'in', ['sold', 'canceled'])]}"/>
+                    <button name="action_cancel" type="object" string="Hủy niêm yết"
+                            attrs="{'invisible': [('state', 'in', ['sold', 'canceled'])]}"/>
+                    <button name="action_set_to_new" type="object" string="Đặt về Mới"
+                            attrs="{'invisible': [('state', 'in', ['new', 'sold'])]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,offer_received,offer_accepted,sold"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(estate.estate_property_offer_action)d"
+                                type="action" class="oe_stat_button" icon="fa-money"
+                                context="{'search_default_property_id': active_id}">
+                            <field name="offer_count" widget="statinfo" string="Đề nghị"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h2>
+                            <field name="reference" readonly="1"/>
+                        </h2>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="property_type_id"
+                                   options="{'no_create': True}"/>
+                            <field name="salesperson_id"/>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="best_price" readonly="1"/>
+                            <field name="selling_price" readonly="1"/>
+                            <field name="buyer_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="priority_level"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả chi tiết" name="description">
+                            <group>
+                                <group>
+                                    <field name="description"/>
+                                    <field name="bedrooms"/>
+                                    <field name="living_area"/>
+                                    <field name="facades"/>
+                                    <field name="total_area" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="garage"/>
+                                    <field name="garden"/>
+                                    <field name="garden_area" attrs="{'invisible': [('garden', '=', False)]}"/>
+                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"/>
+                                </group>
+                              
+                            </group>
+                        </page>
+                        <page string="Lời đề nghị mua" name="offers">
+                            <field name="offer_ids" context="{'default_property_id': active_id}">
+                                <tree string="Đề nghị"
+                                      decoration-success="status == 'accepted'"
+                                      decoration-danger="status == 'refused'"
+                                      editable="bottom">
+                                    <field name="price"/>
+                                    <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="date_deadline"/>
+                                    <button name="action_accept" type="object"
+                                            icon="fa-check" title="Chấp nhận"
+                                            attrs="{'invisible': [('status', 'in', ['accepted', 'refused'])]}"/>
+                                    <button name="action_refuse" type="object"
+                                            icon="fa-times" title="Từ chối"
+                                            attrs="{'invisible': [('status', 'in', ['accepted', 'refused'])]}"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Thông tin khác" name="other_info">
+                            <group>
+                                <group>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="estate_property_view_search" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm BĐS">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="property_type_id"/>
+                <field name="salesperson_id"/>
+                <field name="expected_price"/>
+                <separator/>
+                <filter name="filter_available" string="Đang trống"
+                        domain="[('state', 'in', ['new', 'offer_received'])]"/>
+                <filter name="filter_has_offer" string="Có đề nghị"
+                        domain="[('best_price', '&gt;', 0)]"/>
+                <separator/>
+                <group expand="0" string="Mức độ ưu tiên">
+                    <filter name="filter_priority_high" string="Cao"
+                            domain="[('priority_level', '=', 'high')]"/>
+                    <filter name="filter_priority_normal" string="Bình thường"
+                            domain="[('priority_level', '=', 'normal')]"/>
+                    <filter name="filter_priority_low" string="Thấp"
+                            domain="[('priority_level', '=', 'low')]"/>
+                </group>
+                <separator/>
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_by_state" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_type" string="Loại BĐS"
+                            context="{'group_by': 'property_type_id'}"/>
+                    <filter name="group_by_salesperson" string="Nhân viên phụ trách"
+                            context="{'group_by': 'salesperson_id'}"/>
+                    <filter name="group_by_priority" string="Mức độ ưu tiên"
+                            context="{'group_by': 'priority_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="property_type_id" records_draggable="false">
+                <field name="state"/>
+                <field name="reference"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div>
+                                    Mã: <field name="reference"/>
+                                </div>
+                                <div>
+                                    Giá mong muốn: <field name="expected_price"/>
+                                </div>
+                                <div t-if="record.state.raw_value == 'offer_received'">
+                                    Giá tốt nhất: <field name="best_price"/>
+                                </div>
+                                <div t-if="record.selling_price.raw_value">
+                                    Giá bán: <field name="selling_price"/>
+                                </div>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="estate_property_view_calendar" model="ir.ui.view">
+        <field name="name">estate.property.calendar</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch trống" date_start="date_availability" color="property_type_id">
+                <field name="name"/>
+                <field name="property_type_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="estate_property_view_graph" model="ir.ui.view">
+        <field name="name">estate.property.graph</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <graph string="Phân tích Bất động sản" type="bar">
+                <field name="property_type_id"/>
+                <field name="expected_price" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="estate_property_view_pivot" model="ir.ui.view">
+        <field name="name">estate.property.pivot</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân tích Bất động sản">
+                <field name="property_type_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="expected_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="estate_property_action" model="ir.actions.act_window">
+        <field name="name">Bất động sản</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
+        <field name="context">{'search_default_filter_available': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo một tin đăng bất động sản mới
+            </p>
+            <p>
+                Bắt đầu quản lý danh mục đầu tư của bạn ngay hôm nay.
+            </p>
+        </field>
+    </record>
+
+    <!-- SERVER ACTION: Giảm giá 10% hàng loạt -->
+    <record id="action_bulk_discount_10" model="ir.actions.server">
+        <field name="name">Giảm giá 10%</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="binding_model_id" ref="model_estate_property"/>
+        <field name="state">code</field>
+        <field name="code">
+for record in records:
+    record.write({'expected_price': record.expected_price * 0.9})
+        </field>
+    </record>
+</odoo>
